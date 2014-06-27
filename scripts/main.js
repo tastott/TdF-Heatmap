@@ -2,20 +2,11 @@ $(document).ready(function(){
 	
 	getTdfTowns('http://www.letour.fr', 'HISTO/us/TDF/villes.html', function(towns){
 		
-		towns = towns.slice(0, 50);
+		towns = towns.slice(0, 10);
 
-		var i = 0;
-
-		towns.forEach(function(town){
-			
-			getTownStages(town.url, function(stages){
-				town.StageCount = stages.length;
-				setProgress(i + 1, towns.length);
-				if(++i == towns.length){
-					
-					
-					
-				}
+		getStagesForTowns(towns, function(){
+			getLocationsForTowns(towns, function(){
+				alert(towns[0].location);
 			});
 		});
 
@@ -24,6 +15,19 @@ $(document).ready(function(){
 
 
 });
+
+function forEachAsync(items, itemAction, allDoneCallback){
+	if(items.length == 0) allDoneCallback();
+	
+	var i = 0;
+	items.forEach(function(item, index){
+		itemAction(item, function(){
+			if(++i == items.length) allDoneCallback();
+		}, index);
+	});
+	
+	
+}
 
 function setProgress(current, total){
 	$('#progress').attr('value', current / total);
@@ -56,7 +60,24 @@ function getTdfTowns(domain, url, callback){
 	});
 }
 
-function getTownStages(url, callback){
+function getStagesForTowns(towns, callback){
+
+	console.log('Getting stages for ' + towns.length + ' towns...');
+	
+	forEachAsync(towns, function(town, townCallback, i){
+		getStagesForTown(town.url, function(stages){
+			town.StageCount = stages.length;
+			setProgress(i + 1, towns.length);
+			townCallback();
+		});
+	}, function(){
+		console.log('Got stages for ' + towns.length + ' towns');
+		callback();
+	});
+
+}
+
+function getStagesForTown(url, callback){
 	console.log('Getting stages for town ' + url + '...');
 	getHtml(url, function(html){
 		var stages = $(html).find('table.liste')
@@ -72,4 +93,29 @@ function getTownStages(url, callback){
 		console.log('Got stages for town ' + url);
 		callback(stages);
 	})
+}
+
+function getLocationsForTowns(towns, callback){
+
+	console.log('Getting locations for ' + towns.length + ' towns...');
+	var geocoder = new google.maps.Geocoder();
+	
+	forEachAsync(towns, function(town, townCallback, i){
+		
+		geocoder.geocode( { 'address': town.name}, function(results, status) {
+			if(results && results.length){
+				town.location = results[0].geometry.location;
+				town.allLocationResults = results;
+			}
+			
+			setProgress(i + 1, towns.length);
+			townCallback();
+		});
+	
+	
+	}, function(){
+		console.log('Got locations for ' + towns.length + ' towns');
+		callback();
+	});
+
 }
