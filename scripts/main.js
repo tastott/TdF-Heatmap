@@ -2,13 +2,15 @@ $(document).ready(function(){
 	
 	getTdfTowns('http://www.letour.fr', 'HISTO/us/TDF/villes.html', function(towns){
 		
-		//towns = towns.slice(0, 100);
+		towns = towns.slice(0, 50);
 
 		var i = 0;
 
 		towns.forEach(function(town){
+			
 			getTownStages(town.url, function(stages){
 				town.StageCount = stages.length;
+				setProgress(i + 1, towns.length);
 				if(++i == towns.length){
 					
 					
@@ -22,6 +24,10 @@ $(document).ready(function(){
 
 
 });
+
+function setProgress(current, total){
+	$('#progress').attr('value', current / total);
+}
 
 function getHtml(url, callback){
 	$.ajax({
