@@ -2,11 +2,12 @@ $(document).ready(function(){
 	
 	getTdfTowns('http://www.letour.fr', 'HISTO/us/TDF/villes.html', function(towns){
 		
-		towns = towns.slice(0, 10);
+		towns = towns.slice(0,  100);
 
 		getStagesForTowns(towns, function(){
 			getLocationsForTowns(towns, function(){
-				alert(towns[0].location);
+				var data = toHeatmapData(towns);
+				drawHeatmap(data);
 			});
 		});
 
@@ -16,17 +17,23 @@ $(document).ready(function(){
 
 });
 
-function forEachAsync(items, itemAction, allDoneCallback){
+function forEachAsync(items, itemAction, allDoneCallback, pause){
 	if(items.length == 0) allDoneCallback();
 	
-	var i = 0;
-	items.forEach(function(item, index){
-		itemAction(item, function(){
-			if(++i == items.length) allDoneCallback();
-		}, index);
-	});
-	
-	
+	var index = 0;
+
+	var doNext = function(){
+		itemAction(items[index], function(){
+			if(index == items.length - 1) allDoneCallback();
+			else {
+				++index;
+				if(pause) setTimeout(doNext, pause);
+				else doNext();
+			}
+		}, index)
+	};
+
+	doNext();
 }
 
 function setProgress(current, total){
@@ -99,23 +106,78 @@ function getLocationsForTowns(towns, callback){
 
 	console.log('Getting locations for ' + towns.length + ' towns...');
 	var geocoder = new google.maps.Geocoder();
-	
+
 	forEachAsync(towns, function(town, townCallback, i){
 		
 		geocoder.geocode( { 'address': town.name}, function(results, status) {
 			if(results && results.length){
+				console.log('Got location for ' + town.name);
 				town.location = results[0].geometry.location;
 				town.allLocationResults = results;
+				setProgress(i + 1, towns.length);
+			} else {
+				console.log('Failed to get location for ' + town.name + '. Status: ' + status);
 			}
-			
-			setProgress(i + 1, towns.length);
+
 			townCallback();
 		});
-	
 	
 	}, function(){
 		console.log('Got locations for ' + towns.length + ' towns');
 		callback();
-	});
+	}, 750);
+
+}
+
+function toHeatmapData(towns){
+
+	var max = 0;
+
+	var data = towns
+				.filter(function(town){return town.location;})
+				.map(function(town){
+					max = Math.max(max, town.StageCount);
+					return {
+						lat: town.location.lat(),
+						lng: town.location.lng(),
+						count: town.StageCount
+					};
+				});
+
+	return {
+		max: max,
+		data: data
+	};
+}
+
+function drawHeatmap(data){
+	 
+ 	var myLatlng = new google.maps.LatLng(48.3333, 16.35);
+
+    var myOptions = {
+      zoom: 3,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: false,
+      scrollwheel: true,
+      draggable: true,
+      navigationControl: true,
+      mapTypeControl: false,
+      scaleControl: true,
+      disableDoubleClickZoom: false
+    };
+    var map = new google.maps.Map($("#heatmap")[0], myOptions);
+    
+    var heatmap = new HeatmapOverlay(map, {
+        "radius":20,
+        "visible":true, 
+        "opacity":60
+    });
+  
+    
+    // this is important, because if you set the data set too early, the latlng/pixel projection doesn't work
+    google.maps.event.addListenerOnce(map, "idle", function(){
+        heatmap.setDataSet(data);
+    });
 
 }
