@@ -1,8 +1,9 @@
 $(document).ready(function(){
 	
 	getTdfTowns('http://www.letour.fr', 'HISTO/us/TDF/villes.html', function(towns){
+		writeTownsJson(towns);
 		
-		towns = towns.slice(0,  100);
+		towns = towns.slice(0,  10);
 
 		getStagesForTowns(towns, function(){
 			getLocationsForTowns(towns, function(){
@@ -16,6 +17,11 @@ $(document).ready(function(){
 
 
 });
+
+function writeTownsJson(towns){
+	var json = JSON.stringify(towns);
+	$('#json-text-area').text(json);
+}
 
 function forEachAsync(items, itemAction, allDoneCallback, pause){
 	if(items.length == 0) allDoneCallback();
@@ -58,7 +64,9 @@ function getTdfTowns(domain, url, callback){
 			        	.map(function(i, a){
 			        		return {
 			        			name: a.text,
-			        			url: domain + a.href.substring(7, a.href.length)
+			        			url: domain + a.href.substring(7, a.href.length),
+								location: null,
+								stageCount: 0
 			        		}		
 			        	})
 			        	.toArray();
@@ -73,7 +81,7 @@ function getStagesForTowns(towns, callback){
 	
 	forEachAsync(towns, function(town, townCallback, i){
 		getStagesForTown(town.url, function(stages){
-			town.StageCount = stages.length;
+			town.stageCount = stages.length;
 			setProgress(i + 1, towns.length);
 			townCallback();
 		});
@@ -136,11 +144,11 @@ function toHeatmapData(towns){
 	var data = towns
 				.filter(function(town){return town.location;})
 				.map(function(town){
-					max = Math.max(max, town.StageCount);
+					max = Math.max(max, town.stageCount);
 					return {
 						lat: town.location.lat(),
 						lng: town.location.lng(),
-						count: town.StageCount
+						count: town.stageCount
 					};
 				});
 
