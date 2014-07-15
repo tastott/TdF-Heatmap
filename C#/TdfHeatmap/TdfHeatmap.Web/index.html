@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Tour de France Heatmap</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="Scripts\require\require.js"></script>
+    <script>
+        require.config({
+            baseUrl: 'Scripts',
+            paths: {
+                text: 'require/plugins/text',
+                json: 'require/plugins/json',
+                async: 'require/plugins/async'
+            },
+            shim: {
+                'heatmap-gmaps': {
+                    deps: ['heatmap'],
+                    exports: 'HeatmapOverlay'
+                }
+            }
+        });
+
+        require(['app']);
+    </script>
+</head>
+<body>
+    <h1>Tour de France Heatmap</h1>
+
+    <div id="heatmap" style="width: 600px; height: 600px;"></div>
+</body>
+</html>

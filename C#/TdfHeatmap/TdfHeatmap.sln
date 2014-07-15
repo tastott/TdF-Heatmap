@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TdfHeatmap.Scraper", "TdfHeatmap.Scraper\TdfHeatmap.Scraper.csproj", "{111D90D4-818B-4550-BE3C-E9FDA654E35D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TdfHeatmap.Web", "TdfHeatmap.Web\TdfHeatmap.Web.csproj", "{BA91321B-8411-42D4-BE17-71F3DBEBB193}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{111D90D4-818B-4550-BE3C-E9FDA654E35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{111D90D4-818B-4550-BE3C-E9FDA654E35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{111D90D4-818B-4550-BE3C-E9FDA654E35D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA91321B-8411-42D4-BE17-71F3DBEBB193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA91321B-8411-42D4-BE17-71F3DBEBB193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA91321B-8411-42D4-BE17-71F3DBEBB193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA91321B-8411-42D4-BE17-71F3DBEBB193}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
