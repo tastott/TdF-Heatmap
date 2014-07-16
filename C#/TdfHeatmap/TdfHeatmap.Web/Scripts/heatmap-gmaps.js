@@ -164,3 +164,7 @@ HeatmapOverlay.prototype.addDataPoint = function(lat, lng, count){
 HeatmapOverlay.prototype.toggle = function(){
     this.heatmap.toggleDisplay();
 }
+
+HeatmapOverlay.prototype.setRadius = function (radius) {
+    this.heatmap.setRadius(radius);
+}

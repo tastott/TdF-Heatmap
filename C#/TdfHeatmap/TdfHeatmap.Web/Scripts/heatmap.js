@@ -615,6 +615,11 @@
         cleanup: function(){
             var me = this;
             me.get("element").removeChild(me.get("canvas"));
+        },
+        setRadius: function (radius) {
+            var me = this;
+            me.set("radius", radius);
+            me.store.setDataSet({ max: me.store.max, data: me.store.get("data") }, true);
         }
     };
 

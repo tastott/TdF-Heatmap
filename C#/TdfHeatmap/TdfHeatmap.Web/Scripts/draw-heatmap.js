@@ -21,7 +21,7 @@
         };
     }
 
-    var markerMinZoom = 7;
+    var markerMinZoom = 8;
 
     return {
         draw: function (towns) {
@@ -29,10 +29,10 @@
 
             var heatmapData = ToHeatmapData(towns);
 
-            var myLatlng = new google.maps.LatLng(48.3333, 16.35);
+            var myLatlng = new google.maps.LatLng(48.8567, 2.3508);
 
             var myOptions = {
-                zoom: 3,
+                zoom: 5,
                 center: myLatlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 disableDefaultUI: false,
@@ -46,7 +46,7 @@
             var map = new google.maps.Map($("#heatmap")[0], myOptions);
 
             var heatmap = new HeatmapOverlay(map, {
-                "radius": 40,
+                "radius": 30,
                 "visible": true,
                 "opacity": 60
             });
@@ -56,6 +56,10 @@
             //Show/hide markers depending on zoom level
             google.maps.event.addListener(map, 'zoom_changed', function () {
                 var zoom = map.getZoom();
+
+                var heatMapRadius = zoom * 7;
+                heatmap.setRadius(heatMapRadius);
+                
                 // iterate over markers and call setVisible
                 for (i = 0; i < markers.length; i++) {
                     markers[i].setVisible(zoom >= markerMinZoom);
