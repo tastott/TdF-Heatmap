@@ -12,11 +12,12 @@
             paths: {
                 text: 'require/plugins/text',
                 json: 'require/plugins/json',
-                async: 'require/plugins/async'
+                async: 'require/plugins/async',
+                "google-maps": 'http://maps.google.com/maps/api/js?sensor=false'
             },
             shim: {
                 'heatmap-gmaps': {
-                    deps: ['heatmap'],
+                    deps: ['heatmap', 'async!google-maps'],
                     exports: 'HeatmapOverlay'
                 }
             }
