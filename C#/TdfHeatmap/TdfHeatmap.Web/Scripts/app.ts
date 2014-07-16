@@ -10,29 +10,8 @@ import heatmap = require('draw-heatmap')
 //alert(output);
 
 
-function ToHeatmapData(towns) {
-
-    var max = 0;
-
-    var data = towns
-        .filter(town => town.Location)
-        .map(town => {
-            max = Math.max(max, town.Stages.length);
-            return {
-                lat: town.Location.Latitude,
-                lng: town.Location.Longitude,
-                count: town.Stages.length
-            };
-        });
-
-    return {
-        max: max,
-        data: data
-    };
-}
 
 require(['json!towns.json'], (towns) => {
 
-    var heatmapData = ToHeatmapData(towns);
-    heatmap.draw(heatmapData);
+    heatmap.draw(towns.filter(t => t.Location));
 });
