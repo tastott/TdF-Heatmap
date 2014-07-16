@@ -5,7 +5,7 @@
     //var output = eval(funcText);
     //alert(output);
     require(['json!towns.json'], function (towns) {
-        heatmap.draw(towns.filter(function (t) {
+        heatmap.Draw(towns.filter(function (t) {
             return t.Location;
         }));
     });

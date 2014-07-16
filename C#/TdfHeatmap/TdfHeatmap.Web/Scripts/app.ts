@@ -13,5 +13,5 @@ import heatmap = require('draw-heatmap')
 
 require(['json!towns.json'], (towns) => {
 
-    heatmap.draw(towns.filter(t => t.Location));
+    heatmap.Draw(towns.filter(t => t.Location));
 });

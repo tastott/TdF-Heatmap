@@ -20,7 +20,8 @@
     <Content Include="app.css" />
     <Content Include="index.html" />
     <TypeScriptCompile Include="Scripts\draw-heatmap.d.ts" />
-    <Content Include="Scripts\draw-heatmap.js" />
+    <TypeScriptCompile Include="Scripts\draw-heatmap.ts" />
+    <TypeScriptCompile Include="Scripts\heatmap-gmaps.d.ts" />
     <Content Include="Scripts\heatmap-gmaps.js" />
     <Content Include="Scripts\heatmap.js" />
     <Content Include="Scripts\jquery.js" />
@@ -31,6 +32,9 @@
     <Content Include="Scripts\jquery.d.ts" />
     <Content Include="Scripts\require\require.d.ts" />
     <Content Include="Scripts\require\plugins\text.js" />
+    <Content Include="Scripts\typings\google.maps.d.ts" />
+    <Content Include="Scripts\typings\knockout\knockout.d.ts" />
+    <TypeScriptCompile Include="Scripts\view-models.ts" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>

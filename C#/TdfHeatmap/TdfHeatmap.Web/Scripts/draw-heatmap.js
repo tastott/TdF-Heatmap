@@ -1,19 +1,18 @@
-﻿define(['jquery', 'heatmap-gmaps', 'async!google-maps'], function ($, HeatmapOverlay) {
-
+﻿///<reference path="typings/google.maps.d.ts" />
+define(["require", "exports", 'jquery', 'heatmap-gmaps'], function(require, exports, $, HeatmapOverlay) {
     function ToHeatmapData(towns) {
-
         var max = 0;
 
-            var data = towns
-                .filter(function(town){ return town.Location;})
-                .map(function(town){
-                    max = Math.max(max, town.Stages.length);
-                    return {
-                        lat: town.Location.Latitude,
-                        lng: town.Location.Longitude,
-                        count: town.Stages.length
-                    };
-                });
+        var data = towns.filter(function (town) {
+            return town.Location;
+        }).map(function (town) {
+            max = Math.max(max, town.Stages.length);
+            return {
+                lat: town.Location.Latitude,
+                lng: town.Location.Longitude,
+                count: town.Stages.length
+            };
+        });
 
         return {
             max: max,
@@ -21,11 +20,9 @@
         };
     }
 
-    var markerMinZoom = 8;
-
-    return {
-        draw: function (towns) {
-
+    function Draw(towns) {
+        require(['async!google-maps'], function () {
+            var markerMinZoom = 8;
 
             var heatmapData = ToHeatmapData(towns);
 
@@ -59,9 +56,8 @@
 
                 var heatMapRadius = zoom * 7;
                 heatmap.setRadius(heatMapRadius);
-                
-                // iterate over markers and call setVisible
-                for (i = 0; i < markers.length; i++) {
+
+                for (var i = 0; i < markers.length; i++) {
                     markers[i].setVisible(zoom >= markerMinZoom);
                 }
             });
@@ -71,23 +67,23 @@
                 heatmap.setDataSet(heatmapData);
 
                 //Add marker for each town
-                towns
-                    //.filter(function (town, index) { return index < 10; })
-                    .forEach(function (town) {
-                        var latlng = new google.maps.LatLng(town.Location.Latitude, town.Location.Longitude);
+                towns.forEach(function (town) {
+                    var latlng = new google.maps.LatLng(town.Location.Latitude, town.Location.Longitude);
 
-                        // To add the marker to the map, use the 'map' property
-                        var marker = new google.maps.Marker({
-                            position: latlng,
-                            map: map,
-                            title: town.Name
-                        });
+                    // To add the marker to the map, use the 'map' property
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: town.Name
+                    });
 
-                        marker.setVisible(map.getZoom() >= markerMinZoom);
+                    marker.setVisible(map.getZoom() >= markerMinZoom);
 
-                        markers.push(marker);
+                    markers.push(marker);
                 });
             });
-        }
+        });
     }
+    exports.Draw = Draw;
 });
+//# sourceMappingURL=draw-heatmap.js.map
